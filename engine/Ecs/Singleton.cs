@@ -1,6 +1,6 @@
 namespace TinyEngine.Ecs;
 
-public class Singleton<T> : IComponentContainer where T : struct
+public class Singleton<T> : IComponentContainer where T : class
 {
     public Singleton()
     {
@@ -13,18 +13,20 @@ public class Singleton<T> : IComponentContainer where T : struct
             throw new InvalidOperationException("Singleton already spawned");
         }
 
-        SingletComponent = new Component<T>(entityId,value);
+        EntityId = entityId;
+        Singlet = value;
     }
 
-    public T? Singlet => SingletComponent?.Value;
+    public EntityId? EntityId {get; private set;}
+    public T? Singlet {get; private set;}
 
-    public Component<T>? SingletComponent {get; private set;}
 
     public void RemoveEntity(EntityId entityId)
     {
-        if (SingletComponent?.EntityId == entityId)
+        if (entityId == EntityId)
         {
-            SingletComponent = null;
+            Singlet = null;
+            EntityId = null;
         }
     }
 }

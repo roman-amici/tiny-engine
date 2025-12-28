@@ -4,7 +4,7 @@ using TinyEngine.SdlAbstractions;
 
 namespace Graphics;
 
-public enum Sprite
+public enum GameSprite
 {
     ShipBankLeft1,
     ShipBankLeft2,
@@ -41,7 +41,7 @@ public class SpriteSheet
     public SpriteSheet(string imageName, string descriptionName, Screen screen)
     {
         var texture = screen.Renderer.LoadTexture(imageName);
-        SpriteAtlas = new SpriteAtlas<Sprite>(texture);
+        SpriteAtlas = new SpriteAtlas<GameSprite>(texture);
 
         foreach(var line in File.ReadLines(descriptionName))
         {
@@ -51,7 +51,7 @@ public class SpriteSheet
             }
     
             var splits = line.Split(",");
-            var name = Enum.Parse<Sprite>(splits[0]);
+            var name = Enum.Parse<GameSprite>(splits[0]);
             var x = int.Parse(splits[1]);
             var y = int.Parse(splits[2]);
 
@@ -62,23 +62,52 @@ public class SpriteSheet
         }
     }
 
-    public SpriteAtlas<Sprite> SpriteAtlas {get;}
+    public SpriteAtlas<GameSprite> SpriteAtlas {get;}
 
     public Animations Animations {get;} = new();
 }
 
 public class Animations
 {
-    public Animation<Sprite> ShipCenter {get;} = new(
-        [ new(Sprite.ShipCenter1, TimeSpan.FromMilliseconds(500)),
-          new(Sprite.ShipCenter2, TimeSpan.FromMilliseconds(500))
+    public static Sprite<GameSprite> MakeSprite(GameSprite spriteKey)
+    {
+        return new Sprite<GameSprite>()
+        {
+            SpriteKey = spriteKey,
+            Scale = 2.5
+        };
+    }
+
+    public Animation<GameSprite> ShipCenter {get;} = new(
+        [ new(MakeSprite(GameSprite.ShipCenter1), TimeSpan.FromMilliseconds(500)),
+          new(MakeSprite(GameSprite.ShipCenter2), TimeSpan.FromMilliseconds(500))
         ]
     );
+
+    public Animation<GameSprite> ShipLeft {get;} = new([
+        new(MakeSprite(GameSprite.ShipLeft1), TimeSpan.FromMilliseconds(500)),
+        new(MakeSprite(GameSprite.ShipLeft2), TimeSpan.FromMilliseconds(500)),
+    ]);
+
+    public Animation<GameSprite> ShipBankLeft {get;} = new([
+        new(MakeSprite(GameSprite.ShipBankLeft1), TimeSpan.FromMilliseconds(500)),
+        new(MakeSprite(GameSprite.ShipBankLeft2), TimeSpan.FromMilliseconds(500)),
+    ]);
+
+    public Animation<GameSprite> ShipRight {get;} = new([
+        new(MakeSprite(GameSprite.ShipRight1), TimeSpan.FromMilliseconds(500)),
+        new(MakeSprite(GameSprite.ShipRight2), TimeSpan.FromMilliseconds(500)),
+    ]);
+
+    public Animation<GameSprite> ShipBankRight {get;} = new([
+        new(MakeSprite(GameSprite.ShipBankRight1), TimeSpan.FromMilliseconds(500)),
+        new(MakeSprite(GameSprite.ShipBankRight2), TimeSpan.FromMilliseconds(500)),
+    ]);
 }
 
-public struct SpriteAnimation(Animation<Sprite> animation)
+public struct SpriteAnimation(Animation<GameSprite> animation)
 {
-    public Animation<Sprite> Animation {get;} = animation;
+    public Animation<GameSprite> Animation {get; private set;} = animation;
     public FrameIndex FrameIndex {get; set;}
 
     public void Update(TimeSpan delta)
@@ -87,5 +116,14 @@ public struct SpriteAnimation(Animation<Sprite> animation)
         advance.FrameTimeElapsed += delta;
         
         FrameIndex = Animation.NextIndex(advance);
+    }
+
+    public void ChangeAnimation(Animation<GameSprite> newAnimation)
+    {
+        Animation = newAnimation;
+        if (FrameIndex.Index > Animation.Frames.Length)
+        {
+            FrameIndex = new();
+        }
     }
 }

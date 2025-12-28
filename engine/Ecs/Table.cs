@@ -26,6 +26,15 @@ public class Table<T> : IComponentContainer, IEnumerable<T>
         }
     }
 
+    public IEnumerable<(EntityId,T)> WithEntityId()
+    {
+        for (var i = 0; i < Count; i++)
+        {
+            var component = data[i];
+            yield return (component.EntityId,component.Value);
+        }
+    }
+
     public IEnumerable<int> Indices()
     {
         for (var i = 0; i < Count; i++)

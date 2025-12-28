@@ -17,13 +17,14 @@ public class AnimateSpriteSystem(
         {
             var frame = animation.Animation.Frames[animation.FrameIndex.Index];
 
-            var spriteDimensions = spriteSheet.SpriteAtlas.GetSpriteDimensions(frame.SpriteKey);
-            var spriteWS = spriteDimensions.Translate(camera.WorldViewport.TopLeft);
+            var spriteDimensions = spriteSheet.SpriteAtlas.GetSpriteDimensions(frame.Sprite.SpriteKey);
+            spriteDimensions = spriteDimensions.Scaled(frame.Sprite.Scale);
+            var spriteWS = spriteDimensions.WithTopLeft(position.Bounds.TopLeft);
         
             var screenRect = camera.ToScreenSpace(spriteWS);
             if(screen.IsVisible(screenRect))
             {
-                spriteSheet.SpriteAtlas.DrawSprite(screen, frame.SpriteKey, screenRect);
+                spriteSheet.SpriteAtlas.DrawSprite(screen, frame.Sprite.SpriteKey, screenRect);
             }
         }
     }

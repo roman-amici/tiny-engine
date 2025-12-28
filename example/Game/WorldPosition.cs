@@ -2,7 +2,12 @@ using TinyEngine.General;
 
 namespace Game;
 
-public struct WorldPosition(Point2D topLeft)
+public struct WorldPosition(Rect2D position)
 {
-    public Point2D TopLeft {get; set;} = topLeft;
+    public Rect2D Bounds {get; set;} = position;
+
+    public void Update(TimeSpan delta, Kinematics ballistics)
+    {
+        Bounds = Bounds.Translated(delta.TotalSeconds * ballistics.Velocity);
+    }
 }

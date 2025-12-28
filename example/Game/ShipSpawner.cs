@@ -7,7 +7,11 @@ public class ShipSpawner(
     World world,
     SpriteSheet spriteSheet,
     Table<WorldPosition> position,
-    Table<SpriteAnimation> animations) : SpawningSystem<object?>(world)
+    Table<SpriteAnimation> animations,
+    Table<Kinematics> kinematics,
+    Table<ConfineToPlayArea> confine,
+    PlayArea playArea,
+    Singleton<Player> player) : SpawningSystem<object?>(world)
 {
     public override void Execute()
     {
@@ -16,7 +20,14 @@ public class ShipSpawner(
 
     protected override void Spawn(EntityId entityId, object? context)
     {
-        position.Add(entityId, new (new(0,0)));
+        var sprite = spriteSheet.Animations.ShipRight.Frames[0].Sprite;
+        var dimensions = spriteSheet.SpriteAtlas.GetSpriteDimensions(sprite.SpriteKey);
+        dimensions = dimensions.Scaled(sprite.Scale);
+
+        position.Add(entityId, new(dimensions.WithBottomLeft(playArea.Area.BottomLeft)));
         animations.Add(entityId, new(spriteSheet.Animations.ShipCenter));
+        kinematics.Add(entityId, new());
+        confine.Add(new());
+        player.Spawn(entityId, new());
     }
 }

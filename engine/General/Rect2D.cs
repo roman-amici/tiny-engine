@@ -56,10 +56,40 @@ public struct Rect2D
             BottomRight.Y >= point.Y;
     }
 
-    public Rect2D Translate(Point2D point)
+    public Rect2D WithTopLeft(Point2D topLeft)
     {
-        var topLeft = new Point2D(TopLeft.X + point.X,TopLeft.Y + point.Y);
+        return new(topLeft, Width, Height);
+    }
+
+    public Rect2D WithTopRight(Point2D topRight)
+    {
+        var topLeft = new Point2D(topRight.X - Width, topRight.Y);
 
         return new(topLeft, Width, Height);
+    }
+
+    public Rect2D WithBottomRight(Point2D bottomRight)
+    {
+        var topLeft = new Point2D(bottomRight.X - Width, bottomRight.Y - Height);
+        return new(topLeft, Width, Height);
+
+    }
+
+    public Rect2D WithBottomLeft(Point2D bottomLeft)
+    {
+        var topLeft = new Point2D(bottomLeft.X, bottomLeft.Y - Height);
+        return new(topLeft, Width, Height);
+    }
+
+    public Rect2D Translated(Vector2D vector)
+    {
+        var topLeft = TopLeft + vector;
+
+        return new(topLeft, Width, Height);
+    }
+
+    public Rect2D Scaled(double scale)
+    {
+        return new(TopLeft, Width*scale,Height*scale);
     }
 }

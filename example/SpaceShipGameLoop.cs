@@ -2,8 +2,13 @@ using Game;
 using TinyEngine.Drawing;
 using TinyEngine.Ecs;
 using TinyEngine.Engine;
+using TinyEngine.Input;
 
-public class SpaceShipGameLoop(Screen screen, TimeDelta timeDelta, List<GameSystem> schedule) : GameLoop
+public class SpaceShipGameLoop(
+    Screen screen,
+    InputState inputState, 
+    TimeDelta timeDelta, 
+    List<GameSystem> schedule) : GameLoop(inputState)
 {
     public override bool Tick(TimeSpan delta)
     {

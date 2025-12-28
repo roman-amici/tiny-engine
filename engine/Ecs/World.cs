@@ -43,52 +43,6 @@ public class World()
         }
     }
 
-    public void AddTableJoin<T,U>()
-    where T : struct
-    where U : struct
-    {
-        var joinType = typeof(TableJoin<T,U>);
-        if (Joins.ContainsKey(joinType))
-        {
-            return;
-        }
-
-        if (!Components.TryGetValue(typeof(Table<T>), out var table1))
-        {
-            throw new Exception($"Unknown table component {typeof(T)}");
-        }
-
-        if (!Components.TryGetValue(typeof(Table<U>), out var table2))
-        {
-            throw new Exception($"Unknown table component {typeof(T)}");
-        }
-
-        Joins.Add(joinType, new TableJoin<T,U>((Table<T>)table1,(Table<U>)table2));
-    }
-
-    public void AddSingletonJoin<T,U>()
-    where T : struct
-    where U : struct
-    {
-        var joinType = typeof(SingletonJoin<T,U>);
-        if (Joins.ContainsKey(joinType))
-        {
-            return;
-        }
-
-        if (!Components.TryGetValue(typeof(Singleton<T>), out var singleton))
-        {
-            throw new Exception($"Unknown singleton component {typeof(T)}");
-        }
-
-        if (!Components.TryGetValue(typeof(Table<U>), out var table))
-        {
-            throw new Exception($"Unknown table component {typeof(T)}");
-        }
-
-        Joins.Add(joinType, new SingletonJoin<T,U>((Singleton<T>)singleton,(Table<U>)table));
-    }
-
     public IComponentJoin AddJoin(Type joinType)
     {
         var constructors = joinType.GetConstructors();

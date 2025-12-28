@@ -30,9 +30,16 @@ public class Animation<T>(Frame<T>[] frames) where T : notnull
     }
 }
 
-public struct Frame<T>(T spriteKey, TimeSpan duration) where T : notnull
+public struct Sprite<T>(T key)
 {
-    public T SpriteKey {get;} = spriteKey;
+    public T SpriteKey {get; set;} = key;
+    public double Scale {get; set;} = 1.0;
+}
+
+public struct Frame<T>(Sprite<T> sprite, TimeSpan duration) where T : notnull
+{
+    public Sprite<T> Sprite {get;} = sprite;
+
     public TimeSpan Duration {get;} = duration;
 }
 

@@ -1,9 +1,20 @@
 using SDL2;
+using TinyEngine.Input;
+using TinyEngine.SdlAbstractions;
 
 namespace TinyEngine.Engine;
 
 public abstract class GameLoop
 {
+    protected GameLoop() {}
+
+    protected GameLoop(InputState state)
+    {
+        InputParser = new(state);
+    }
+
+    public InputParser InputParser {get;} = new();
+
     public void Run()
     {
         var running = true;
@@ -33,6 +44,9 @@ public abstract class GameLoop
             {
                 case SDL.SDL_EventType.SDL_QUIT:
                     return false;
+                default:
+                    InputParser.ParseInput(e);
+                    break;
             }
         }
 
