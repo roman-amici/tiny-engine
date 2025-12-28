@@ -21,6 +21,25 @@ public class Renderer : IDisposable
 
     public nint RendererPtr {get;}
 
+    public Texture LoadTexture(string fileName)
+    {
+        return Texture.LoadTexture(RendererPtr, fileName);
+    }
+
+    public void Clear()
+    {
+        var result = SDL.SDL_RenderClear(RendererPtr);
+        if (result < 0)
+        {
+            throw new Exception($"Failed to clear render: {SDL.SDL_GetError()}");
+        }
+    }
+
+    public void Present()
+    {
+        SDL.SDL_RenderPresent(RendererPtr);
+    }
+
     public void Dispose()
     {
         SDL.SDL_DestroyRenderer(RendererPtr);

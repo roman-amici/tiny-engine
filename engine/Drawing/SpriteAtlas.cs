@@ -18,7 +18,7 @@ where T : notnull
         SpriteCoordinates.Add(sprite, new Rect2D(topLeft, bottomRight));
     }
 
-    public void AddSprite(T sprite, uint width, uint height, int x, uint y)
+    public void AddSprite(T sprite, int x, int y, uint width, uint height)
     {
         SpriteCoordinates.Add(sprite, new(new(x,y), new(x+width, y+height)));
     }
@@ -43,5 +43,12 @@ where T : notnull
         }
 
         screen.DrawTexture(SpriteSheet, source, destination);
+    }
+
+    public Rect2D GetSpriteDimensions(T sprite)
+    {
+        var rect = SpriteCoordinates[sprite];
+
+        return new (new(0,0), new(rect.Width,rect.Height));
     }
 }

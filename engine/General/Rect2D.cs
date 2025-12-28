@@ -32,8 +32,10 @@ public struct Rect2D
 
     public Point2D TopLeft { get; set; }
     public Point2D BottomRight { get; set; }
+    public Point2D TopRight => new(TopLeft.X + Width, TopLeft.Y);
+    public Point2D BottomLeft => new(TopLeft.X, TopLeft.Y + Height);
     public double Width => BottomRight.X - TopLeft.X;
-    public double Height => BottomRight.Y - BottomRight.Y;
+    public double Height => BottomRight.Y - TopLeft.Y;
 
     public bool Intersects(Rect2D other)
     {
@@ -52,5 +54,12 @@ public struct Rect2D
             TopLeft.Y <= point.Y &&
             BottomRight.X >= point.X &&
             BottomRight.Y >= point.Y;
+    }
+
+    public Rect2D Translate(Point2D point)
+    {
+        var topLeft = new Point2D(TopLeft.X + point.X,TopLeft.Y + point.Y);
+
+        return new(topLeft, Width, Height);
     }
 }

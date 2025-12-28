@@ -26,6 +26,14 @@ public class Table<T> : IComponentContainer, IEnumerable<T>
         }
     }
 
+    public IEnumerable<int> Indices()
+    {
+        for (var i = 0; i < Count; i++)
+        {
+            yield return i;
+        }
+    }
+
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();

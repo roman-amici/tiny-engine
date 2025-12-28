@@ -103,6 +103,17 @@ public class Screen : IDisposable
         DrawTexture(texture, sourceRect, destinationRect);
     }
 
+    public bool IsVisible(Rect2D rect)
+    {
+        if (rect.TopRight.X < 0.0 || rect.TopLeft.X > Window.Width ||
+            rect.BottomRight.Y < 0.0 || rect.TopLeft.Y > Window.Height)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public void AddFont(Font font)
     {
         if (Text != null)
