@@ -41,16 +41,10 @@ public struct Rect2D
 
     public bool Intersects(Rect2D other)
     {
-        // To the left or right
-        if (TopLeft.X >= other.TopRight.X  ||
-            other.TopLeft.X >= TopRight.X)
-        {
-            return false;
-        }
-
-        // Above or below
-        if (TopLeft.Y >= other.BottomLeft.Y  ||
-            other.TopLeft.Y >= BottomLeft.Y)
+        if (TopLeft.X + Width < other.TopLeft.X ||
+            TopLeft.X > other.TopLeft.X + other.Width ||
+            TopLeft.Y + Height < other.TopLeft.Y ||
+            TopLeft.Y > other.TopLeft.Y + other.Height)
         {
             return false;
         }

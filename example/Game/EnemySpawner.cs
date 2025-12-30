@@ -17,6 +17,7 @@ public class EnemySpawner(
     Table<MovementPlan> movementPlans,
     Table<SpriteAnimation> animations,
     Table<Sprite<GameSprite>> sprites,
+    Table<ShootRandomly> shoot,
     Table<Enemy> enemies
     ) : SpawningSystem<EnemySpawnContext>(world)
 {
@@ -50,6 +51,8 @@ public class EnemySpawner(
 
         movementPlans.Add(entityId, context.Plan);
         movementIndices.Add(entityId,new());
+
+        shoot.Add(entityId, new());
 
         AddHealth(entityId, context.EnemyType);
         AddDamage(entityId, context.EnemyType);

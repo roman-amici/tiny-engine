@@ -38,8 +38,16 @@ public class LaserSpawner(
         sprites.Add(entityId, sprite);
 
         var dimensions = spriteSheet.SpriteAtlas.GetSpriteDimensions(sprite.SpriteKey);
-        dimensions = dimensions.WithBottomLeft(context.Position);
         dimensions = dimensions.Scaled(sprite.Scale);
+
+        if (context.FromBottom)
+        {
+            dimensions = dimensions.WithTopLeft(context.Position);
+        }
+        else
+        {
+            dimensions = dimensions.WithBottomLeft(context.Position);
+        }
         dimensions = dimensions.Translated(new(-dimensions.Width / 2,0));
 
         position.Add(entityId, new(dimensions));
@@ -60,6 +68,7 @@ public struct LaserSpawnContext(LaserType laserType, Point2D position, double da
 {
     public LaserType LaserType {get;} = laserType;
     public Point2D Position {get;} = position;
+    public bool FromBottom {get; set;}
     public double Damage {get;} = damage;
     public Vector2D Velocity {get;} = velocity;
 }

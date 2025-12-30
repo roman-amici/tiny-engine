@@ -74,7 +74,8 @@ public class PlayerInputSystem(
         if (player.CanShoot.CanShoot)
         {
             var x = position.Bounds.Center.X;
-            shots.Enqueue(new(LaserType.Flat, new(x, position.Bounds.TopLeft.Y), 1.0, new(0, -300.0)));
+            var y = position.Bounds.TopLeft.Y - 1.0;
+            shots.Enqueue(new(LaserType.Flat, new(x, y), 1.0, new(0, -300.0)));
             player.CanShoot.FireShot();
         }
     }

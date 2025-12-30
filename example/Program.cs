@@ -17,6 +17,7 @@ var spriteSheet = new SpriteSheet("Assets/SpriteSheet.png", "Assets/SpriteSheet.
 var inputState = new InputState();
 
 var world = new World();
+world.AddResource(new Random());
 world.AddResource(screen);
 world.AddResource(spriteSheet);
 world.AddResource(new Camera(640,720, 1.0));
@@ -44,6 +45,7 @@ world.AddComponent(new Table<MovementPlan>());
 world.AddComponent(new Table<MovementIndex>());
 world.AddComponent(new Table<Enemy>());
 world.AddComponent(new Table<DestroyOnAnimationEnd>());
+world.AddComponent(new Table<ShootRandomly>());
 
 var shipSpawner = world.CreateInstance<ShipSpawner>();
 shipSpawner.Execute();
@@ -62,6 +64,7 @@ var snap = world.CreateInstance<ConfineToPlayAreaSystem>();
 var cleanupExit = world.CreateInstance<DeleteOnExitPlayAreaSystem>();
 var cleanupAnimation = world.CreateInstance<DeleteOnAnimationEndSystem>();
 var explodeOnDeath = world.CreateInstance<ExplodeOnDeathSystem>();
+var shootRandomly = world.CreateInstance<ShootRandomlySystem>();
 var shoot = world.CreateInstance<LaserSpawner>();
 var trajectoryMove = world.CreateInstance<TrajectoryMovementSystem>();
 var impact = world.CreateInstance<DamageSystem>();
@@ -75,8 +78,9 @@ var game = new SpaceShipGameLoop(
     timeDelta, 
     [
         playerInput,
-        trajectoryMove,
         kinematics,
+        trajectoryMove,
+        shootRandomly,
         shoot,
         impact,
         snap,

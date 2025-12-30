@@ -12,6 +12,7 @@ public class ShipSpawner(
     Table<Kinematics> kinematics,
     Table<ConfineToPlayArea> confine,
     Table<Sprite<GameSprite>> sprites,
+    Table<Health> healths,
     PlayArea playArea,
     Singleton<Player> player) : SpawningSystem<object?>(world)
 {
@@ -32,5 +33,6 @@ public class ShipSpawner(
         sprites.Add(entityId, new());
         confine.Add(entityId, new());
         player.Spawn(entityId, new());
+        healths.Add(entityId, new(1.0));
     }
 }

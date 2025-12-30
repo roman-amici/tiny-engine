@@ -30,11 +30,6 @@ public class DamageSystem(
                     }
                     var newHealth = health.TakeDamage(damage.Amount);
                     healths.T1.Update(healthEntity, newHealth);
-
-                    if (newHealth.Current == 0.0)
-                    {
-                        
-                    }
                 }
             }
         }
