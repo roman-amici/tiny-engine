@@ -48,7 +48,7 @@ public class Table<T> : IComponentContainer, IEnumerable<T>
         return GetEnumerator();
     }
 
-    public void Add(Component<T> value)
+    private void Add(Component<T> value)
     {
 
         for (var i = 0; i < data.Count; i++)

@@ -5,43 +5,44 @@ using TinyEngine.Ecs;
 
 namespace Graphics;
 
-public class AnimateSpriteSystem(
+public class RenderSpriteSystem(
     Screen screen,
     SpriteSheet spriteSheet,
     Camera camera,
-    TableJoin<SpriteAnimation, WorldPosition> animations) : GameSystem
+    TableJoin<Sprite<GameSprite>, WorldPosition> sprites) : GameSystem
 {
     public override void Execute()
     {
-        foreach(var (animation,position) in animations)
+        foreach(var (sprite,position) in sprites)
         {
-            var frame = animation.Animation.Frames[animation.FrameIndex.Index];
-
-            var spriteDimensions = spriteSheet.SpriteAtlas.GetSpriteDimensions(frame.Sprite.SpriteKey);
-            spriteDimensions = spriteDimensions.Scaled(frame.Sprite.Scale);
+            var spriteDimensions = spriteSheet.SpriteAtlas.GetSpriteDimensions(sprite.SpriteKey);
+            spriteDimensions = spriteDimensions.Scaled(sprite.Scale);
             var spriteWS = spriteDimensions.WithTopLeft(position.Bounds.TopLeft);
         
             var screenRect = camera.ToScreenSpace(spriteWS);
             if(screen.IsVisible(screenRect))
             {
-                spriteSheet.SpriteAtlas.DrawSprite(screen, frame.Sprite.SpriteKey, screenRect);
+                spriteSheet.SpriteAtlas.DrawSprite(screen, sprite.SpriteKey, screenRect);
             }
         }
     }
 }
 
 public class AnimationAdvanceSystem(
-    Table<SpriteAnimation> animations,
+    TableJoin<SpriteAnimation,Sprite<GameSprite>> animations,
     TimeDelta delta
 ) : GameSystem
 {
     public override void Execute()
     {
-        foreach(var i in animations.Indices())
+        foreach(var (i,j) in animations.Indices())
         {
-            var state = animations[i];
+            var state = animations.T1[i];
             state.Update(delta.Delta);
-            animations.Update(i, state);
+            animations.T1.Update(i, state);
+
+            var sprite = state.Animation.Frames[state.FrameIndex.Index];
+            animations.T2.Update(j, sprite.Sprite);
         }
     }
 }

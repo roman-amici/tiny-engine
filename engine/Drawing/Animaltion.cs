@@ -1,16 +1,42 @@
 namespace TinyEngine.Drawing;
 
-public class Animation<T>(Frame<T>[] frames) where T : notnull
+public class Animation<T>(Frame<T>[] frames, bool cycle = true) where T : notnull
 {
     public Frame<T>[] Frames {get;} = frames;
 
-    public bool Cycle {get;} = true;
+    public bool Cycle {get;} = cycle;
+
+    public bool IsComplete(FrameIndex frameIndex)
+    {
+        if (Cycle)
+        {
+            return false;
+        }
+
+        if (frameIndex.Index >= Frames.Length)
+        {
+            return true;
+        }
+
+        if (frameIndex.Index == Frames.Length-1 && frameIndex.FrameTimeElapsed >= Frames.Last().Duration)
+        {
+            return true;
+        }
+
+        return false;
+    }
 
     public FrameIndex NextIndex(FrameIndex f)
     {
+        if (IsComplete(f))
+        {
+            return new FrameIndex(Frames.Length-1, Frames.Last().Duration);
+        }
+
         while (true)
         {
             var frame = Frames[f.Index];
+
             if (f.FrameTimeElapsed < frame.Duration)
             {
                 return f;

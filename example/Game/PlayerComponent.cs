@@ -1,3 +1,5 @@
+using System.Dynamic;
+
 namespace Game;
 
 // Player marker for the player entity
@@ -9,7 +11,7 @@ public class Player
 
 public class CanShootState
 {
-    public static TimeSpan CanShootCoolDown = TimeSpan.FromSeconds(0.2); 
+    public static TimeSpan CanShootCoolDown = TimeSpan.FromSeconds(0.5); 
 
 
     public bool CanShoot {get; private set;} = true;
@@ -24,5 +26,16 @@ public class CanShootState
             CanShoot = true;
             TimeInState = TimeSpan.Zero;
         }
+    }
+
+    public void FireShot()
+    {
+        if (!CanShoot)
+        {
+            return;
+        }
+
+        CanShoot = false;
+        TimeInState = TimeSpan.Zero;
     }
 }

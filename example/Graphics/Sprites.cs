@@ -103,6 +103,37 @@ public class Animations
         new(MakeSprite(GameSprite.ShipBankRight1), TimeSpan.FromMilliseconds(500)),
         new(MakeSprite(GameSprite.ShipBankRight2), TimeSpan.FromMilliseconds(500)),
     ]);
+
+    public Animation<GameSprite> LaserFlat {get;} = new([
+       new(MakeSprite(GameSprite.LaserFlat1), TimeSpan.FromMilliseconds(250)),
+       new(MakeSprite(GameSprite.LaserFlat2), TimeSpan.FromMilliseconds(250))
+    ]);
+
+    public Animation<GameSprite> LaserRound {get;} = new([
+       new(MakeSprite(GameSprite.LaserRound1), TimeSpan.FromMilliseconds(250)),
+       new(MakeSprite(GameSprite.LaserRound2), TimeSpan.FromMilliseconds(250))
+    ]);
+
+    public Animation<GameSprite> Explosion {get;} = new([
+        new(MakeSprite(GameSprite.Explosion1), TimeSpan.FromMilliseconds(250)),
+        new(MakeSprite(GameSprite.Explosion2), TimeSpan.FromMilliseconds(250)),
+        new(MakeSprite(GameSprite.Explosion3), TimeSpan.FromMilliseconds(250)),
+        new(MakeSprite(GameSprite.Explosion4), TimeSpan.FromMilliseconds(250)),
+    ], false);
+
+    public Animation<GameSprite> EnemySmall {get;} = new([
+        new(MakeSprite(GameSprite.EnemySmall1), TimeSpan.FromMilliseconds(500)),
+        new(MakeSprite(GameSprite.EnemySmall2), TimeSpan.FromMilliseconds(500)),
+    ]);
+
+    public Animation<GameSprite> EnemyMedium {get;} = new([
+        new(MakeSprite(GameSprite.EnemyMedium1), TimeSpan.FromMilliseconds(500)),
+        new(MakeSprite(GameSprite.EnemyMedium2), TimeSpan.FromMilliseconds(500)),
+    ]);
+    public Animation<GameSprite> EnemyLarge {get;} = new([
+        new(MakeSprite(GameSprite.EnemyLarge2), TimeSpan.FromMilliseconds(500)),
+        new(MakeSprite(GameSprite.EnemyLarge2), TimeSpan.FromMilliseconds(500)),
+    ]);
 }
 
 public struct SpriteAnimation(Animation<GameSprite> animation)
@@ -125,5 +156,10 @@ public struct SpriteAnimation(Animation<GameSprite> animation)
         {
             FrameIndex = new();
         }
+    }
+
+    public bool IsAtEnd()
+    {
+        return Animation.IsComplete(FrameIndex);
     }
 }

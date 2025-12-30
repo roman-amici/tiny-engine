@@ -1,4 +1,5 @@
 using Graphics;
+using TinyEngine.Drawing;
 using TinyEngine.Ecs;
 
 namespace Game;
@@ -10,6 +11,7 @@ public class ShipSpawner(
     Table<SpriteAnimation> animations,
     Table<Kinematics> kinematics,
     Table<ConfineToPlayArea> confine,
+    Table<Sprite<GameSprite>> sprites,
     PlayArea playArea,
     Singleton<Player> player) : SpawningSystem<object?>(world)
 {
@@ -27,7 +29,8 @@ public class ShipSpawner(
         position.Add(entityId, new(dimensions.WithBottomLeft(playArea.Area.BottomLeft)));
         animations.Add(entityId, new(spriteSheet.Animations.ShipCenter));
         kinematics.Add(entityId, new());
-        confine.Add(new());
+        sprites.Add(entityId, new());
+        confine.Add(entityId, new());
         player.Spawn(entityId, new());
     }
 }

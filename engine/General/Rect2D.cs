@@ -37,15 +37,25 @@ public struct Rect2D
     public double Width => BottomRight.X - TopLeft.X;
     public double Height => BottomRight.Y - TopLeft.Y;
 
+    public Point2D Center => new(TopLeft.X + (Width/2), TopLeft.Y + (Height / 2));
+
     public bool Intersects(Rect2D other)
     {
-        if (TopLeft.X < other.BottomRight.X && BottomRight.X > other.TopLeft.X &&
-        TopLeft.Y > other.BottomRight.Y && BottomRight.Y < other.TopLeft.Y )
+        // To the left or right
+        if (TopLeft.X >= other.TopRight.X  ||
+            other.TopLeft.X >= TopRight.X)
         {
-            return true;
-        } 
+            return false;
+        }
 
-        return false;
+        // Above or below
+        if (TopLeft.Y >= other.BottomLeft.Y  ||
+            other.TopLeft.Y >= BottomLeft.Y)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     public bool Contains(Point2D point)
@@ -78,6 +88,12 @@ public struct Rect2D
     public Rect2D WithBottomLeft(Point2D bottomLeft)
     {
         var topLeft = new Point2D(bottomLeft.X, bottomLeft.Y - Height);
+        return new(topLeft, Width, Height);
+    }
+
+    public Rect2D WithCenter(Point2D center)
+    {
+        var topLeft = new Point2D(center.X - Width / 2, center.Y - Height / 2);
         return new(topLeft, Width, Height);
     }
 

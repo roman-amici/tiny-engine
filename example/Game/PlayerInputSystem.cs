@@ -1,19 +1,20 @@
-using Graphics;
-using TinyEngine.Drawing;
 using TinyEngine.Ecs;
 using TinyEngine.Input;
 
 namespace Game;
 
 public class PlayerInputSystem(
-    InputState state,
+    InputState inputState,
     SingletonJoin<Player,Kinematics> playerKinematics,
-    TimeDelta delta
+    SingletonJoin<Player,WorldPosition> playerPosition,
+    TimeDelta delta,
+    Queue<LaserSpawnContext> shots
     ) : GameSystem
 {
     public override void Execute()
     {
         UpdateState();
+        Shoot();
         Steer();
     }
 
@@ -38,11 +39,11 @@ public class PlayerInputSystem(
 
         var (entityId,_,kinematics) = t.Value;
 
-        if (state.KeysDown.Contains(Key.Left))
+        if (inputState.KeysDown.Contains(Key.Left))
         {
             kinematics.Acceleration = new(-200, kinematics.Acceleration.Y);
         }
-        else if (state.KeysDown.Contains(Key.Right))
+        else if (inputState.KeysDown.Contains(Key.Right))
         {
             kinematics.Acceleration = new(200, kinematics.Acceleration.Y);
         }
@@ -53,5 +54,28 @@ public class PlayerInputSystem(
         }
 
         playerKinematics.T.Update(entityId, kinematics);
+    }
+
+    public void Shoot()
+    {
+        if (!inputState.KeysDown.Contains(Key.Space))
+        {
+            return;
+        }
+
+        var t = playerPosition.Join;
+        if (t == null)
+        {
+            return;
+        }
+
+        var (player,position) = t.Value;
+
+        if (player.CanShoot.CanShoot)
+        {
+            var x = position.Bounds.Center.X;
+            shots.Enqueue(new(LaserType.Flat, new(x, position.Bounds.TopLeft.Y), 1.0, new(0, -300.0)));
+            player.CanShoot.FireShot();
+        }
     }
 }

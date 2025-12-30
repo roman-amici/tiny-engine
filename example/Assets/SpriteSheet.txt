@@ -8,8 +8,8 @@ ShipRight1,48,0,16,24
 ShipRight2,48,24,16,24
 ShipBankRight1,64,0,16,24
 ShipBankRight2,64,24,16,24
-EnemySmall1,70,0,16,16
-EnemySmall2,70,16,16,16
+EnemySmall1,80,0,16,16
+EnemySmall2,80,16,16,16
 EnemyMedium1,96,0,32,18
 EnemyMedium2,96,18,32,18
 EnemyLarge1,128,0,32,32
