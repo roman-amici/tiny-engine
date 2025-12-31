@@ -18,7 +18,8 @@ public class EnemySpawner(
     Table<SpriteAnimation> animations,
     Table<Sprite<GameSprite>> sprites,
     Table<ShootRandomly> shoot,
-    Table<Enemy> enemies
+    Table<Enemy> enemies,
+    Table<Score> scores
     ) : SpawningSystem<EnemySpawnContext>(world)
 {
     public override void Execute()
@@ -55,6 +56,7 @@ public class EnemySpawner(
 
         AddHealth(entityId, context.EnemyType);
         AddDamage(entityId, context.EnemyType);
+        AddScore(entityId, context.EnemyType);
     }
 
     private void AddDamage(EntityId entityId, EnemyType type)
@@ -81,6 +83,19 @@ public class EnemySpawner(
         };
 
         healths.Add(entityId, new(health));
+    }
+
+    private void AddScore(EntityId entityId, EnemyType type)
+    {
+        var score = type switch
+        {
+          EnemyType.Small => 50,
+          EnemyType.Medium => 100,
+          EnemyType.Large => 5000,
+          _ => 0.0  
+        };
+
+        scores.Add(entityId, new(score));
     }
 }
 

@@ -4,6 +4,8 @@ using TinyEngine.Ecs;
 
 namespace Game;
 
+public struct SpawnShipMessage{}
+
 public class ShipSpawner(
     World world,
     SpriteSheet spriteSheet,
@@ -13,12 +15,16 @@ public class ShipSpawner(
     Table<ConfineToPlayArea> confine,
     Table<Sprite<GameSprite>> sprites,
     Table<Health> healths,
+    Queue<SpawnShipMessage> spawnMessages,
     PlayArea playArea,
     Singleton<Player> player) : SpawningSystem<object?>(world)
 {
     public override void Execute()
     {
-        SpawnEntity(null);
+        while(spawnMessages.TryDequeue(out _))
+        {
+            SpawnEntity(null);
+        }
     }
 
     protected override void Spawn(EntityId entityId, object? context)

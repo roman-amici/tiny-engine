@@ -142,7 +142,9 @@ public class ExplodeOnDeathSystem(
     Table<SpriteAnimation> animations,
     Table<Sprite<GameSprite>> sprites,
     Table<WorldPosition> positions,
+    Table<Score> scores,
     Table<DestroyOnAnimationEnd> ends,
+    GameState gameState,
     TableJoin<Health, WorldPosition> healthPosition
 
 ) : GameSystem
@@ -162,6 +164,12 @@ public class ExplodeOnDeathSystem(
 
         foreach(var entityId in toRemove)
         {
+            var score = scores.Find(entityId);
+            if (score != null)
+            {
+                gameState.Score += score.Value.BaseScore;
+            }
+
             world.RemoveEntity(entityId);
         }
     }

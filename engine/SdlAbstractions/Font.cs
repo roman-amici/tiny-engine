@@ -18,6 +18,8 @@ public class Font : IDisposable
             var err = SDL.SDL_GetError();
             throw new Exception($"Failed to initialize ttf: {err}");
         }
+
+        Initialized = true;
     }
 
     private Font(nint fontPointer)

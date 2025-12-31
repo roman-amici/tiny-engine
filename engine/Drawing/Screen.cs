@@ -19,7 +19,7 @@ public class Screen : IDisposable
     // TODO: Support multiple fonts
     public TextCache? Text {get; private set;}
 
-    public void SetBackground(Color color)
+    public void SetDrawColor(Color color)
     {
         if(SDL.SDL_SetRenderDrawColor(Renderer.RendererPtr, color.R, color.G, color.B, color.A) < 0)
         {
@@ -58,7 +58,7 @@ public class Screen : IDisposable
 
     public void DrawRect(Rect2D rect, Color color)
     {
-        SetBackground(color);
+        SetDrawColor(color);
 
         var rectSDL = rect.ToSdl();
         if (SDL.SDL_RenderFillRect(Renderer.RendererPtr, ref rectSDL) < 0)
@@ -68,7 +68,19 @@ public class Screen : IDisposable
         }
     }
 
-    public void DrawText(TextDefinition draw, Point2D topLeft)
+    public void DrawBorder(Rect2D rect, Color color)
+    {
+        var rectSdl = rect.ToSdl();
+
+        SetDrawColor(color);
+        if(SDL.SDL_RenderDrawRect(Renderer.RendererPtr, ref rectSdl) < 0)
+        {
+            var err = SDL.SDL_GetError();
+            throw new Exception($"Failed to draw rect: {err}");
+        }
+    }
+
+    public Rect2D DrawText(TextDefinition draw, Point2D topLeft)
     {
         if (Text == null)
         {
@@ -84,6 +96,8 @@ public class Screen : IDisposable
         };
 
         DrawTexture(texture, destinationRect);
+
+        return destinationRect;
     }
 
     public void DrawTextCentered(TextDefinition draw, Point2D center)
