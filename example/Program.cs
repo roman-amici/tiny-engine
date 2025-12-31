@@ -31,6 +31,7 @@ world.AddResource(new Queue<LaserSpawnContext>());
 
 var q = new Queue<EnemySpawnContext>();
 world.AddResource(q);
+world.AddResource(new Queue<DamagedMessage>());
 
 world.AddComponent(new Table<WorldPosition>());
 world.AddComponent(new Table<SpriteAnimation>());
@@ -46,12 +47,13 @@ world.AddComponent(new Table<MovementIndex>());
 world.AddComponent(new Table<Enemy>());
 world.AddComponent(new Table<DestroyOnAnimationEnd>());
 world.AddComponent(new Table<ShootRandomly>());
+world.AddComponent(new Table<FlashState>());
 
 var shipSpawner = world.CreateInstance<ShipSpawner>();
 shipSpawner.Execute();
 
 var enemySpawner = world.CreateInstance<EnemySpawner>();
-q.Enqueue(new(EnemyType.Small, MovementPlan.Diamond(
+q.Enqueue(new(EnemyType.Large, MovementPlan.Diamond(
     150, 
     playArea.Area.Center,
     TimeSpan.FromSeconds(1.0))));
@@ -64,6 +66,7 @@ var snap = world.CreateInstance<ConfineToPlayAreaSystem>();
 var cleanupExit = world.CreateInstance<DeleteOnExitPlayAreaSystem>();
 var cleanupAnimation = world.CreateInstance<DeleteOnAnimationEndSystem>();
 var explodeOnDeath = world.CreateInstance<ExplodeOnDeathSystem>();
+var flashSystem = world.CreateInstance<FlashOnDamagedSystem>();
 var shootRandomly = world.CreateInstance<ShootRandomlySystem>();
 var shoot = world.CreateInstance<LaserSpawner>();
 var trajectoryMove = world.CreateInstance<TrajectoryMovementSystem>();
@@ -71,6 +74,7 @@ var impact = world.CreateInstance<DamageSystem>();
 
 var animationAdvance = world.CreateInstance<AnimationAdvanceSystem>();
 var renderSprites = world.CreateInstance<RenderSpriteSystem>();
+var transformSprites = world.CreateInstance<TransformSpriteSystem>();
 
 var game = new SpaceShipGameLoop(
     screen, 
@@ -88,7 +92,9 @@ var game = new SpaceShipGameLoop(
         cleanupExit,
         cleanupAnimation,
         updatePlayerAnimation,
-        animationAdvance, 
+        animationAdvance,
+        flashSystem,
+        transformSprites,
         renderSprites
     ]);
 

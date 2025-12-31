@@ -42,11 +42,10 @@ public class EnemySpawner(
         };
         animations.Add(entityId, new(enemyAnimation));
 
-        var sprite = enemyAnimation.Frames.First().Sprite;
-        sprites.Add(entityId, sprite);
+        var spriteKey = enemyAnimation.Frames.First().SpriteKey;
+        sprites.Add(entityId, new(spriteKey));
 
-        var dimensions = spriteSheet.SpriteAtlas.GetSpriteDimensions(sprite.SpriteKey);
-        dimensions = dimensions.Scaled(sprite.Scale);
+        var dimensions = spriteSheet.GetBounds(spriteKey);
         positions.Add(entityId, new(dimensions));
 
         movementPlans.Add(entityId, context.Plan);

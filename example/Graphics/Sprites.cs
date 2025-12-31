@@ -62,6 +62,12 @@ public class SpriteSheet
         }
     }
 
+    public Rect2D GetBounds(GameSprite spriteKey)
+    {
+        var dimensions = SpriteAtlas.GetSpriteDimensions(spriteKey);
+        return dimensions.Scaled(2.5); // Uniform scaling for now
+    }
+
     public SpriteAtlas<GameSprite> SpriteAtlas {get;}
 
     public Animations Animations {get;} = new();
@@ -69,70 +75,61 @@ public class SpriteSheet
 
 public class Animations
 {
-    public static Sprite<GameSprite> MakeSprite(GameSprite spriteKey)
-    {
-        return new Sprite<GameSprite>()
-        {
-            SpriteKey = spriteKey,
-            Scale = 2.5
-        };
-    }
-
     public Animation<GameSprite> ShipCenter {get;} = new(
-        [ new(MakeSprite(GameSprite.ShipCenter1), TimeSpan.FromMilliseconds(500)),
-          new(MakeSprite(GameSprite.ShipCenter2), TimeSpan.FromMilliseconds(500))
+        [ new(GameSprite.ShipCenter1, TimeSpan.FromMilliseconds(500)),
+          new(GameSprite.ShipCenter2, TimeSpan.FromMilliseconds(500))
         ]
     );
 
     public Animation<GameSprite> ShipLeft {get;} = new([
-        new(MakeSprite(GameSprite.ShipLeft1), TimeSpan.FromMilliseconds(500)),
-        new(MakeSprite(GameSprite.ShipLeft2), TimeSpan.FromMilliseconds(500)),
+        new(GameSprite.ShipLeft1, TimeSpan.FromMilliseconds(500)),
+        new(GameSprite.ShipLeft2, TimeSpan.FromMilliseconds(500)),
     ]);
 
     public Animation<GameSprite> ShipBankLeft {get;} = new([
-        new(MakeSprite(GameSprite.ShipBankLeft1), TimeSpan.FromMilliseconds(500)),
-        new(MakeSprite(GameSprite.ShipBankLeft2), TimeSpan.FromMilliseconds(500)),
+        new(GameSprite.ShipBankLeft1, TimeSpan.FromMilliseconds(500)),
+        new(GameSprite.ShipBankLeft2, TimeSpan.FromMilliseconds(500)),
     ]);
 
     public Animation<GameSprite> ShipRight {get;} = new([
-        new(MakeSprite(GameSprite.ShipRight1), TimeSpan.FromMilliseconds(500)),
-        new(MakeSprite(GameSprite.ShipRight2), TimeSpan.FromMilliseconds(500)),
+        new(GameSprite.ShipRight1, TimeSpan.FromMilliseconds(500)),
+        new(GameSprite.ShipRight2, TimeSpan.FromMilliseconds(500)),
     ]);
 
     public Animation<GameSprite> ShipBankRight {get;} = new([
-        new(MakeSprite(GameSprite.ShipBankRight1), TimeSpan.FromMilliseconds(500)),
-        new(MakeSprite(GameSprite.ShipBankRight2), TimeSpan.FromMilliseconds(500)),
+        new(GameSprite.ShipBankRight1, TimeSpan.FromMilliseconds(500)),
+        new(GameSprite.ShipBankRight2, TimeSpan.FromMilliseconds(500)),
     ]);
 
     public Animation<GameSprite> LaserFlat {get;} = new([
-       new(MakeSprite(GameSprite.LaserFlat1), TimeSpan.FromMilliseconds(250)),
-       new(MakeSprite(GameSprite.LaserFlat2), TimeSpan.FromMilliseconds(250))
+       new(GameSprite.LaserFlat1, TimeSpan.FromMilliseconds(250)),
+       new(GameSprite.LaserFlat2, TimeSpan.FromMilliseconds(250))
     ]);
 
     public Animation<GameSprite> LaserRound {get;} = new([
-       new(MakeSprite(GameSprite.LaserRound1), TimeSpan.FromMilliseconds(250)),
-       new(MakeSprite(GameSprite.LaserRound2), TimeSpan.FromMilliseconds(250))
+       new(GameSprite.LaserRound1, TimeSpan.FromMilliseconds(250)),
+       new(GameSprite.LaserRound2, TimeSpan.FromMilliseconds(250))
     ]);
 
     public Animation<GameSprite> Explosion {get;} = new([
-        new(MakeSprite(GameSprite.Explosion1), TimeSpan.FromMilliseconds(250)),
-        new(MakeSprite(GameSprite.Explosion2), TimeSpan.FromMilliseconds(250)),
-        new(MakeSprite(GameSprite.Explosion3), TimeSpan.FromMilliseconds(250)),
-        new(MakeSprite(GameSprite.Explosion4), TimeSpan.FromMilliseconds(250)),
+        new(GameSprite.Explosion1, TimeSpan.FromMilliseconds(250)),
+        new(GameSprite.Explosion2, TimeSpan.FromMilliseconds(250)),
+        new(GameSprite.Explosion3, TimeSpan.FromMilliseconds(250)),
+        new(GameSprite.Explosion4, TimeSpan.FromMilliseconds(250)),
     ], false);
 
     public Animation<GameSprite> EnemySmall {get;} = new([
-        new(MakeSprite(GameSprite.EnemySmall1), TimeSpan.FromMilliseconds(500)),
-        new(MakeSprite(GameSprite.EnemySmall2), TimeSpan.FromMilliseconds(500)),
+        new(GameSprite.EnemySmall1, TimeSpan.FromMilliseconds(500)),
+        new(GameSprite.EnemySmall2, TimeSpan.FromMilliseconds(500)),
     ]);
 
     public Animation<GameSprite> EnemyMedium {get;} = new([
-        new(MakeSprite(GameSprite.EnemyMedium1), TimeSpan.FromMilliseconds(500)),
-        new(MakeSprite(GameSprite.EnemyMedium2), TimeSpan.FromMilliseconds(500)),
+        new(GameSprite.EnemyMedium1, TimeSpan.FromMilliseconds(500)),
+        new(GameSprite.EnemyMedium2, TimeSpan.FromMilliseconds(500)),
     ]);
     public Animation<GameSprite> EnemyLarge {get;} = new([
-        new(MakeSprite(GameSprite.EnemyLarge2), TimeSpan.FromMilliseconds(500)),
-        new(MakeSprite(GameSprite.EnemyLarge2), TimeSpan.FromMilliseconds(500)),
+        new(GameSprite.EnemyLarge2, TimeSpan.FromMilliseconds(500)),
+        new(GameSprite.EnemyLarge2, TimeSpan.FromMilliseconds(500)),
     ]);
 }
 

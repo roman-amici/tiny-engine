@@ -34,11 +34,10 @@ public class LaserSpawner(
         };
         animations.Add(entityId, new(laserAnimation));
 
-        var sprite = laserAnimation.Frames.First().Sprite;
-        sprites.Add(entityId, sprite);
+        var spriteKey = laserAnimation.Frames.First().SpriteKey;
+        sprites.Add(entityId, new(spriteKey));
 
-        var dimensions = spriteSheet.SpriteAtlas.GetSpriteDimensions(sprite.SpriteKey);
-        dimensions = dimensions.Scaled(sprite.Scale);
+        var dimensions = spriteSheet.GetBounds(spriteKey);
 
         if (context.FromBottom)
         {
@@ -48,6 +47,7 @@ public class LaserSpawner(
         {
             dimensions = dimensions.WithBottomLeft(context.Position);
         }
+        
         dimensions = dimensions.Translated(new(-dimensions.Width / 2,0));
 
         position.Add(entityId, new(dimensions));
