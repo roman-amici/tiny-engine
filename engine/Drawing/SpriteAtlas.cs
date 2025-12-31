@@ -23,26 +23,17 @@ where T : notnull
         SpriteCoordinates.Add(sprite, new(new(x,y), new(x+width, y+height)));
     }
 
-    public void DrawSprite(Screen screen, T sprite, Point2D topLeft, double scale = 1.0)
+    public void DrawSprite(Sprite<T> sprite, Screen screen, Camera camera)
     {
-        if (!SpriteCoordinates.TryGetValue(sprite, out var source))
+        if (!SpriteCoordinates.TryGetValue(sprite.SpriteKey, out var source))
         {
             source = SpriteCoordinates.FirstOrDefault().Value;
         }
 
-        var destination = new Rect2D(topLeft, new((topLeft.X + source.Width)*scale, (topLeft.Y + source.Height) * scale));
+        SpriteSheet.SetTextureColor(sprite.Tint);
 
-        screen.DrawTexture(SpriteSheet, source, destination);
-    }
-
-    public void DrawSprite(Screen screen, T sprite, Rect2D destination)
-    {
-        if (!SpriteCoordinates.TryGetValue(sprite, out var source))
-        {
-            source = SpriteCoordinates.FirstOrDefault().Value;
-        }
-
-        screen.DrawTexture(SpriteSheet, source, destination);
+        var destination = camera.ToScreenSpace(sprite.Transform);
+        screen.DrawTexture(SpriteSheet, source, destination, sprite.Rotation);
     }
 
     public Rect2D GetSpriteDimensions(T sprite)

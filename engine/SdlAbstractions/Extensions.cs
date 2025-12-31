@@ -27,4 +27,13 @@ public static class Extensions
             b = color.B
         };
     }
+
+    public static SDL.SDL_Point ToSdl(this Point2D point)
+    {
+        return new SDL.SDL_Point()
+        {
+            x = (int)point.X,
+            y = (int)point.Y
+        };
+    }
 }

@@ -41,6 +41,21 @@ public class Screen : IDisposable
         }
     }
 
+    public void DrawTexture(Texture texture, Rect2D source, Rect2D destination, double angle)
+    {
+        var sourceBB = source.ToSdl();
+        var destBB = destination.ToSdl();
+
+        var center = source.Center.ToSdl();
+
+        var result = SDL.SDL_RenderCopyEx(Renderer.RendererPtr, texture.TexturePointer, ref sourceBB, ref destBB, angle, ref center, SDL.SDL_RendererFlip.SDL_FLIP_NONE);
+
+        if (result != 0)
+        {
+            throw new Exception(SDL.SDL_GetError());
+        }
+    }
+
     public void DrawRect(Rect2D rect, Color color)
     {
         SetBackground(color);

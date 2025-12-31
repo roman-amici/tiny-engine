@@ -1,3 +1,4 @@
+using System.Drawing;
 using SDL2;
 
 namespace TinyEngine.SdlAbstractions;
@@ -33,6 +34,15 @@ public class Texture : IDisposable
         }
 
         return new Texture(texture);
+    }
+
+    public void SetTextureColor(Color color)
+    {
+        var result = SDL.SDL_SetTextureColorMod(TexturePointer, color.R, color.G, color.B);
+        if (result < 0)
+        {
+            throw new Exception($"Failed to set color mod: {SDL.SDL_GetError()}");
+        }
     }
 
     public void Dispose()

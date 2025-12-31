@@ -1,3 +1,5 @@
+using System.Drawing;
+
 namespace TinyEngine.Drawing;
 
 public class Animation<T>(Frame<T>[] frames, bool cycle = true) where T : notnull
@@ -56,15 +58,9 @@ public class Animation<T>(Frame<T>[] frames, bool cycle = true) where T : notnul
     }
 }
 
-public struct Sprite<T>(T key)
+public struct Frame<T>(T spriteKey, TimeSpan duration) where T : notnull
 {
-    public T SpriteKey {get; set;} = key;
-    public double Scale {get; set;} = 1.0;
-}
-
-public struct Frame<T>(Sprite<T> sprite, TimeSpan duration) where T : notnull
-{
-    public Sprite<T> Sprite {get;} = sprite;
+    public T SpriteKey {get;} = spriteKey;
 
     public TimeSpan Duration {get;} = duration;
 }
