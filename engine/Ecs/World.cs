@@ -16,6 +16,11 @@ public class World()
         {
             container.RemoveEntity(entityId);
         }
+
+        foreach(var join in Joins.Values)
+        {
+            join.EntityRemoved(entityId);
+        }
     }
 
     public EntityId SpawnEntity()

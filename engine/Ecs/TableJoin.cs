@@ -119,6 +119,11 @@ where U : struct
     {
         return GetEnumerator();
     }
+
+    void IComponentJoin.EntityRemoved(EntityId _)
+    {
+        // TODO: Add
+    }
 }
 
 public class TableJoin<T, U, V> : IEnumerable<(T, U, V)>, IComponentJoin
@@ -253,5 +258,10 @@ where V : struct
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
+    }
+
+    void IComponentJoin.EntityRemoved(EntityId _)
+    {
+       // TODO: Add
     }
 }

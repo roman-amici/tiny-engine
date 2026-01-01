@@ -1,6 +1,5 @@
-using System.Collections;
-
 namespace TinyEngine.Ecs;
+
 
 public class SingletonJoin<TSingle,TTable> : IComponentJoin
     where TSingle : class
@@ -14,6 +13,7 @@ public class SingletonJoin<TSingle,TTable> : IComponentJoin
 
     public Singleton<TSingle> S {get;}
     public Table<TTable> T {get;}
+
 
     public (TSingle,TTable)? Join
     {
@@ -53,6 +53,11 @@ public class SingletonJoin<TSingle,TTable> : IComponentJoin
 
             return (S.EntityId!.Value, S.Singlet, t.Value);
         }
+    }
+
+    public void EntityRemoved(EntityId entityId)
+    {
+        // TODO: Add
     }
 }
 
@@ -113,4 +118,10 @@ public class SingletonJoin<TSingle,TTable1, TTable2> : IComponentJoin
             return (S.EntityId!.Value,s,t1,t2);
         }
     }
+
+    public void EntityRemoved(EntityId entityId)
+    {
+        // TODO: Add
+    }
 }
+

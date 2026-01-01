@@ -2,7 +2,10 @@ namespace TinyEngine.Ecs;
 
 public interface IComponentContainer
 {
-    public void RemoveEntity(EntityId entityId);
+    void RemoveEntity(EntityId entityId);
 }
 
-public interface IComponentJoin;
+public interface IComponentJoin
+{
+    void EntityRemoved(EntityId entityId);
+}
