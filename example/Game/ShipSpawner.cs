@@ -29,7 +29,7 @@ public class ShipSpawner(
 
     protected override void Spawn(EntityId entityId, object? context)
     {
-        var spriteKey = spriteSheet.Animations.ShipRight.Frames[0].SpriteKey;
+        var spriteKey = spriteSheet.Animations.ShipRight.Sequence[0].Element;
         var dimensions = spriteSheet.GetBounds(spriteKey);
 
         position.Add(entityId, new(dimensions.WithBottomLeft(playArea.Area.BottomLeft)));

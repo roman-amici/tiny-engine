@@ -47,7 +47,7 @@ public class AnimationAdvanceSystem(
             state.Update(delta.Delta);
             animations.T1.Update(i, state);
 
-            var spriteKey = state.Animation.Frames[state.FrameIndex.Index].SpriteKey;
+            var spriteKey = state.Animation.Sequence[state.FrameIndex.Index].Element;
             animations.T2.Update(j, new Sprite<GameSprite>(spriteKey));
         }
     }

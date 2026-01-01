@@ -1,6 +1,5 @@
 using TinyEngine.Drawing;
 using TinyEngine.General;
-using TinyEngine.SdlAbstractions;
 
 namespace Graphics;
 
@@ -136,12 +135,12 @@ public class Animations
 public struct SpriteAnimation(Animation<GameSprite> animation)
 {
     public Animation<GameSprite> Animation {get; private set;} = animation;
-    public FrameIndex FrameIndex {get; set;}
+    public TimerIndex FrameIndex {get; set;}
 
     public void Update(TimeSpan delta)
     {
         var advance = FrameIndex;
-        advance.FrameTimeElapsed += delta;
+        advance.TimeInState += delta;
         
         FrameIndex = Animation.NextIndex(advance);
     }
@@ -149,7 +148,7 @@ public struct SpriteAnimation(Animation<GameSprite> animation)
     public void ChangeAnimation(Animation<GameSprite> newAnimation)
     {
         Animation = newAnimation;
-        if (FrameIndex.Index > Animation.Frames.Length)
+        if (FrameIndex.Index > Animation.Sequence.Length)
         {
             FrameIndex = new();
         }

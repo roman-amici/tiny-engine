@@ -180,7 +180,7 @@ public class ExplodeOnDeathSystem(
         var animation = spriteSheet.Animations.Explosion;
         animations.Add(entityId, new(animation));
 
-        var spriteKey = animation.Frames.First().SpriteKey;
+        var spriteKey = animation.Sequence.First().Element;
         sprites.Add(entityId, new(spriteKey));
 
         var dimensions = spriteSheet.GetBounds(spriteKey);

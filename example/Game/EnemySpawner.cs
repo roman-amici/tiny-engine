@@ -13,8 +13,7 @@ public class EnemySpawner(
     Table<WorldPosition> positions,
     Table<Health> healths,
     Table<Damage> damages, // Collision damage
-    Table<MovementIndex> movementIndices,
-    Table<MovementPlan> movementPlans,
+    Table<MovementState> movementPlans,
     Table<SpriteAnimation> animations,
     Table<Sprite<GameSprite>> sprites,
     Table<ShootRandomly> shoot,
@@ -43,14 +42,13 @@ public class EnemySpawner(
         };
         animations.Add(entityId, new(enemyAnimation));
 
-        var spriteKey = enemyAnimation.Frames.First().SpriteKey;
+        var spriteKey = enemyAnimation.Sequence.First().Element;
         sprites.Add(entityId, new(spriteKey));
 
         var dimensions = spriteSheet.GetBounds(spriteKey);
         positions.Add(entityId, new(dimensions));
 
-        movementPlans.Add(entityId, context.Plan);
-        movementIndices.Add(entityId,new());
+        movementPlans.Add(entityId, new(context.Plan));
 
         shoot.Add(entityId, new());
 

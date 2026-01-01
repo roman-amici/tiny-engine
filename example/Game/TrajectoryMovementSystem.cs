@@ -5,21 +5,36 @@ using TinyEngine.General;
 namespace Game;
 
 public class TrajectoryMovementSystem(
-    TableJoin<MovementPlan,MovementIndex,WorldPosition> query,
+    TableJoin<MovementState,WorldPosition> query,
     TimeDelta delta
 ) : GameSystem
 {
     public override void Execute()
     {
-        foreach(var (i,j,k) in query.Indices())
+        foreach(var (i,j) in query.Indices())
         {
-            var (plan,index,currentPosition) = query[i,j,k];
-            var nextIndex = plan.NextIndex(delta.Delta, index);
-            var center = plan.GetPosition(nextIndex);
+            var (plan,currentPosition) = query[i,j];
+            plan.Update(delta.Delta);
 
-            query.T2.Update(j,nextIndex);
-            query.T3.Update(k,new(currentPosition.Bounds.WithCenter(center)));
+            var center = plan.MovementPlan.GetPosition(plan.Index);
+
+            query.T1.Update(i,plan);
+            query.T2.Update(j,new(currentPosition.Bounds.WithCenter(center)));
         }
+    }
+}
+
+public struct MovementState(MovementPlan plan, TimerIndex index = default)
+{
+    public MovementPlan MovementPlan {get; } = plan;
+    public TimerIndex Index {get; set;} = index;
+
+    public void Update(TimeSpan delta)
+    {
+        var advance = Index;
+        advance.TimeInState += delta;
+        
+        Index = MovementPlan.NextIndex(advance);
     }
 }
 
@@ -28,87 +43,28 @@ public struct Trajectory
     public Point2D Start {get; set;}
     public Point2D End {get; set;}
     public TrajectoryTransform Transform {get; set;}
-    public TimeSpan Duration {get; set;}
 }
 
-public struct MovementPlan(Trajectory[] trajectories, bool cycle)
+public class MovementPlan(SequenceElement<Trajectory>[] trajectories, bool cycle) : TimedSequence<Trajectory>(trajectories, cycle)
 {
-    public Trajectory[] Trajectories {get;} = trajectories;
-    public bool Cycle {get;} = cycle;
-    public bool Complete(MovementIndex index)
+    public Point2D GetPosition(TimerIndex index)
     {
-        if (!Cycle)
-        {
-            return false;
-        }
-
-        if (index.Index == Trajectories.Length-1 &&
-            index.TimeElapsed >= Trajectories.Last().Duration)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public Point2D GetPosition(MovementIndex index)
-    {
-        var step = Trajectories[index.Index];
+        var step = Sequence[index.Index];
         var deltaT = step.Duration.TotalSeconds;
         if (deltaT == 0.0)
         {
-            return step.Start;
+            return step.Element.Start;
         }
 
-        var deltaX = step.End.X - step.Start.X;
-        var deltaY = step.End.Y - step.Start.Y;
+        var deltaX = step.Element.End.X - step.Element.Start.X;
+        var deltaY = step.Element.End.Y - step.Element.Start.Y;
 
-        var t = index.TimeElapsed.TotalSeconds;
+        var t = index.TimeInState.TotalSeconds;
 
-        var x = step.Start.X + t * (deltaX / deltaT);
-        var y = step.Start.Y + t * (deltaY / deltaT);
+        var x = step.Element.Start.X + t * (deltaX / deltaT);
+        var y = step.Element.Start.Y + t * (deltaY / deltaT);
 
         return new(x,y);
-    }
-
-    public MovementIndex NextIndex(TimeSpan delta, MovementIndex currentIndex)
-    {
-        if(Complete(currentIndex))
-        {
-            return new()
-            {
-                Index = currentIndex.Index,
-                TimeElapsed = Trajectories.Last().Duration
-            };
-        }
-
-        var next = new MovementIndex
-        {
-            Index = currentIndex.Index,
-            TimeElapsed = currentIndex.TimeElapsed + delta
-        };
-
-        while (true)
-        {
-            var trajectory = Trajectories[next.Index];
-            if (next.TimeElapsed < trajectory.Duration)
-            {
-                return next;
-            }
-
-            next.TimeElapsed -= trajectory.Duration;
-
-            if (Cycle)
-            {
-                next.Index = (next.Index + 1) % Trajectories.Length;
-            }
-            else
-            {
-                next.Index = Math.Min(next.Index + 1, Trajectories.Length-1);
-            }
-        }
     }
 
     public static MovementPlan Diamond(double radius, Point2D center, TimeSpan legDuration)
@@ -118,40 +74,30 @@ public struct MovementPlan(Trajectory[] trajectories, bool cycle)
         var p3 = new Point2D(center.X - radius, center.Y);
         var p4 = new Point2D(center.X, center.Y + radius);
 
-        var plan = new Trajectory[4];
-        plan[0] = new Trajectory()
+        var plan = new SequenceElement<Trajectory>[4];
+        plan[0] = new(new Trajectory()
         {
             Start = p1,
             End = p2,
-            Duration = legDuration
-        };
-        plan[1] = new Trajectory()
+        }, legDuration);
+        plan[1] = new(new Trajectory()
         {
             Start = p2,
             End = p3,
-            Duration = legDuration
-        };
-        plan[2] = new Trajectory()
+        }, legDuration);
+        plan[2] = new(new Trajectory()
         {
             Start = p3,
             End = p4,
-            Duration = legDuration
-        };
-        plan[3] = new Trajectory()
+        }, legDuration);
+        plan[3] = new(new Trajectory()
         {
             Start = p4,
             End = p1,
-            Duration = legDuration
-        };
+        }, legDuration);
 
         return new(plan, true);
     }
-}
-
-public struct MovementIndex()
-{
-    public TimeSpan TimeElapsed {get; set;} = TimeSpan.Zero;
-    public int Index {get; set;}
 }
 
 public enum TrajectoryTransform
