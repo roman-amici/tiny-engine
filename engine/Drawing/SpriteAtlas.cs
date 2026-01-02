@@ -36,6 +36,19 @@ where T : notnull
         screen.DrawTexture(SpriteSheet, source, destination, sprite.Rotation);
     }
 
+    public void DrawSprite(RefSprite<T> sprite, Screen screen, Camera camera)
+    {
+        if (!SpriteCoordinates.TryGetValue(sprite.SpriteKey, out var source))
+        {
+            source = SpriteCoordinates.FirstOrDefault().Value;
+        }
+
+        SpriteSheet.SetTextureColor(sprite.Tint);
+
+        var destination = camera.ToScreenSpace(sprite.Transform);
+        screen.DrawTexture(SpriteSheet, source, destination, sprite.Rotation);
+    }
+
     public Rect2D GetSpriteDimensions(T sprite)
     {
         var rect = SpriteCoordinates[sprite];

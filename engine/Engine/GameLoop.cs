@@ -6,14 +6,14 @@ namespace TinyEngine.Engine;
 
 public abstract class GameLoop
 {
-    protected GameLoop() {}
-
     protected GameLoop(InputState state)
     {
+        InputState = state;
         InputParser = new(state);
     }
 
     public InputParser InputParser {get;} = new();
+    public InputState InputState {get;}
 
     public void Run()
     {

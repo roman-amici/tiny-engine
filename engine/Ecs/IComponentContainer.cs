@@ -7,5 +7,4 @@ public interface IComponentContainer
 
 public interface IComponentJoin
 {
-    void EntityRemoved(EntityId entityId);
 }

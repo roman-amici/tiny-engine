@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace TinyEngine.Ecs;
 
-public struct EntityId(ulong id)
+public struct EntityId(ulong id) : IComparable
 {
     public ulong Id {get;} = id;
 
@@ -37,5 +37,15 @@ public struct EntityId(ulong id)
     public override string ToString()
     {
         return Id.ToString();
+    }
+
+    public int CompareTo(object? obj)
+    {
+        if (obj is EntityId e)
+        {
+            return Id.CompareTo(e.Id);
+        }
+
+        return 0;
     }
 }

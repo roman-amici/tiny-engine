@@ -52,9 +52,4 @@ public class RefSingletonJoin<TSingle,TTable> : IComponentJoin
             return (S.EntityId!.Value, S.Singlet, t);
         }
     }
-
-    public void EntityRemoved(EntityId entityId)
-    {
-        // TODO: Add
-    }
 }

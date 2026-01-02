@@ -15,7 +15,12 @@ where U : class
     public RefTable<T> T1 {get;}
     public RefTable<U> T2 {get;}
 
-    private bool cacheValid = false;
+    private (int,int) LastEpoch {get; set;} = (-1,-1);
+    private bool CacheValid
+    {
+        get => LastEpoch == (T1.Epoch,T2.Epoch);
+    }
+
     private List<(int,int)> indexCache = new();
 
 
@@ -65,7 +70,7 @@ where U : class
 
     public IEnumerable<(int,int)> Indices()
     {
-        if (!cacheValid)
+        if (!CacheValid)
         {
             BuildIndexCache();
         }
@@ -73,7 +78,7 @@ where U : class
         return indexCache;
     }
 
-    private IEnumerable<(int,int)> BuildIndexCache()
+    private void BuildIndexCache()
     {
         indexCache.Clear();
 
@@ -94,11 +99,11 @@ where U : class
 
             if (lastJ >= T2.Count)
             {
-                yield break;
+                break;
             }
         }
 
-        cacheValid = true;
+        LastEpoch = (T1.Epoch,T2.Epoch);
     }
 
     public IEnumerable<(EntityId, T, U)> WithEntityId()
@@ -126,10 +131,5 @@ where U : class
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
-    }
-
-    void IComponentJoin.EntityRemoved(EntityId _)
-    {
-       cacheValid = false;
     }
 }

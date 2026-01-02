@@ -7,6 +7,8 @@ public class RefTable<T> : IEnumerable<T>, IComponentContainer where T : class
     private List<EntityId> ids = new();
     private List<T> data = new();
 
+    public int Epoch {get; private set;}
+
     public int Count => data.Count;
 
     public IEnumerator<T> GetEnumerator()
@@ -53,6 +55,8 @@ public class RefTable<T> : IEnumerable<T>, IComponentContainer where T : class
             throw new ArgumentException(nameof(value), "Value cannot be null");
         }
 
+        Epoch++;
+
         for (var i = 0; i < data.Count; i++)
         {
             if(ids[i] == entityId)
@@ -68,6 +72,7 @@ public class RefTable<T> : IEnumerable<T>, IComponentContainer where T : class
             }
         }
 
+        ids.Add(entityId);
         data.Add(value);
     }
 
@@ -118,7 +123,7 @@ public class RefTable<T> : IEnumerable<T>, IComponentContainer where T : class
     public T? Find(EntityId entityId)
     {
         var i = ids.BinarySearch(entityId);
-        if (i > 0)
+        if (i >= 0)
         {
             return data[i];
         }
@@ -135,6 +140,8 @@ public class RefTable<T> : IEnumerable<T>, IComponentContainer where T : class
             if (ids[i] == entityId)
             {
                 data.RemoveAt(i);
+
+                Epoch++;
                 return true;
             }
         }
